@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #4CAF50;
+            padding: 10px 0;
+            text-align: center;
+            color: white;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        #products, #cart {
+            margin: 20px 0;
+        }
+
+        .product {
+            background-color: green;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            width: 200px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #cart {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        #cart-items {
+            list-style-type: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Online Grocery Store</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Products</a>
+            <a href="#">Cart</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="products">
+            <h2>Products</h2>
+            <div class="product" data-name="Apple" data-price="1.00">
+                <h3>Apple</h3>
+                <p>Price: $1.00</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="product" data-name="Banana" data-price="0.50">
+                <h3>Banana</h3>
+                <p>Price: $0.50</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="product" data-name="Orange" data-price="0.80">
+                <h3>Orange</h3>
+                <p>Price: $0.80</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </section>
+
+        <section id="cart">
+            <h2>Your Cart</h2>
+            <ul id="cart-items"></ul>
+            <p>Total: $<span id="total-price">0.00</span></p>
+            <button id="checkout">Checkout</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Grocery Store</p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', addToCart);
+        });
+
+        function addToCart(event) {
+            const productElement = event.target.parentElement;
+            const name = productElement.getAttribute('data-name');
+            const price = parseFloat(productElement.getAttribute('data-price'));
+
+            const item = cart.find(product => product.name === name);
+
+            if (item) {
+                item.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const totalPriceElement = document.getElementById('total-price');
+
+            cartItems.innerHTML = '';
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - $${item.price} x ${item.quantity}`;
+                cartItems.appendChild(li);
+
+                totalPrice += item.price * item.quantity;
+            });
+
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        }
+
+        document.getElementById('checkout').addEventListener('click', () => {
+            alert(`Checkout - Total: $${document.getElementById('total-price').textContent}`);
+            cart = [];
+            updateCart();
+        });
+    </script>
+</body>
+</html>
